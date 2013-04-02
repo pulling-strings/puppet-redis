@@ -5,9 +5,9 @@ A puppet module which sets up [redis](http://redis.io/).
 # Usage
 
 ```puppet
-  class{ 'redis':
+class{ 'redis':
     append => true
-  }
+}
 ```
 
 See [redis-sandbox](https://github.com/narkisr/redis-sandbox) for a fully working sandbox.
