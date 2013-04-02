@@ -4,11 +4,15 @@ A puppet module which sets up [redis](http://redis.io/).
 
 # Usage
 
-```ruby
- include redis
+```puppet
+  class{ 'redis':
+    append => true
+  }
+
 ```
 
 See [redis-sandbox](https://github.com/narkisr/redis-sandbox) for a fully working sandbox.
+
 
 # Copyright and license
 
