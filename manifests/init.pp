@@ -26,37 +26,45 @@
 # Copyright 2013 Ronen Narkis , unless otherwise noted.
 #
 class redis($append=false) {
-  include apt
 
-  apt::ppa { 'ppa:chris-lea/redis-server': }
-
-  package{'redis-server':
-    ensure  => present,
-    require => Apt::Ppa['ppa:chris-lea/redis-server']
+  case $::operatingsystem {
+    'RedHat', 'CentOS': {
+      $package = 'redis'
+      $service = 'redis'
+      $conf = '/etc/redis.conf'
+      include redis::redhat
+    }
+    'Ubuntu':{
+      $package = 'redis-server'
+      $service = 'redis-server'
+      $conf = '/etc/redis/redis.conf'
+      include redis::ubuntu
+    }
   }
 
   if($append){
     editfile::config { 'append true':
       ensure  => 'yes',
-      path    => '/etc/redis/redis.conf',
+      path    => $conf,
       entry   => 'appendonly',
       sep     => ' ',
-      notify  => Service['redis-server'],
-      require => Package['redis-server']
+      notify  => Service[$service],
+      require => Package[$package]
     }
   }
   editfile::config { 'unbind local':
     ensure  => 'absent',
-    path    => '/etc/redis/redis.conf',
+    path    => $conf,
     entry   => 'bind',
     sep     => ' ',
-    notify  => Service['redis-server'],
-    require => Package['redis-server']
+    notify  => Service[$service],
+    require => Package[$package]
   }
 
-  service{'redis-server':
+  service{$service:
     ensure    => running,
     enable    => true,
     hasstatus => true,
+    require => Package[$package]
   }
 }
