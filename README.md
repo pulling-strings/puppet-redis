@@ -5,6 +5,7 @@ A puppet module which sets up [redis](http://redis.io/).
 # Usage
 
 ```puppet
+# supports Centos and Ubuntu
 class{ 'redis':
     append => true
 }
