@@ -25,7 +25,7 @@
 #
 # Copyright 2013 Ronen Narkis , unless otherwise noted.
 #
-class redis($append=false) {
+class redis($append=false, $unbind=false) {
 
   case $::operatingsystem {
     'RedHat', 'CentOS': {
@@ -52,13 +52,16 @@ class redis($append=false) {
       require => Package[$package]
     }
   }
-  editfile::config { 'unbind local':
-    ensure  => 'absent',
-    path    => $conf,
-    entry   => 'bind',
-    sep     => ' ',
-    notify  => Service[$service],
-    require => Package[$package]
+
+  if($unbind) {
+    editfile::config { 'unbind local':
+      ensure  => 'absent',
+      path    => $conf,
+      entry   => 'bind',
+      sep     => ' ',
+      notify  => Service[$service],
+      require => Package[$package]
+    }
   }
 
   service{$service:
