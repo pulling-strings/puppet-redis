@@ -25,7 +25,12 @@
 #
 # Copyright 2013 Ronen Narkis , unless otherwise noted.
 #
-class redis($append=false, $unbind=false) {
+class redis(
+  $append=false,
+  $unbind=false,
+  $daemonize=true,
+  $manage_services=false
+) {
 
   case $::operatingsystem {
     'RedHat', 'CentOS': {
@@ -48,7 +53,6 @@ class redis($append=false, $unbind=false) {
       path    => $conf,
       entry   => 'appendonly',
       sep     => ' ',
-      notify  => Service[$service],
       require => Package[$package]
     }
   }
@@ -59,15 +63,28 @@ class redis($append=false, $unbind=false) {
       path    => $conf,
       entry   => 'bind',
       sep     => ' ',
-      notify  => Service[$service],
       require => Package[$package]
     }
   }
 
-  service{$service:
-    ensure    => running,
-    enable    => true,
-    hasstatus => true,
-    require => Package[$package]
+  if(!$daemonize) {
+    editfile::config { 'daemonize false':
+      ensure  => 'no',
+      path    => $conf,
+      entry   => 'daemonize',
+      sep     => ' ',
+      require => Package[$package]
+    }
+  }
+
+  if($manage_services) {
+    Editfile::Config <||> ~> Service[$service]
+
+    service{$service:
+      ensure    => running,
+      enable    => true,
+      hasstatus => true,
+      require => Package[$package]
+    }
   }
 }
