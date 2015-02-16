@@ -29,7 +29,9 @@ class redis(
   $append=false,
   $unbind=false,
   $daemonize=true,
-  $manage_services=false
+  $manage_services=false,
+  $manage_sysctl=true,
+  $disable_hugepages=true,
 ) {
 
   case $::operatingsystem {
@@ -85,6 +87,17 @@ class redis(
       enable    => true,
       hasstatus => true,
       require => Package[$package]
+    }
+  }
+
+  if($manage_sysctl) {
+    sysctl{'vm.overcommit_memory': value => 1 }
+  }
+  if($disable_hugepages) {
+    exec{'disable hugepages':
+      command => 'echo never > /sys/kernel/mm/transparent_hugepage/enabled',
+      unless => 'grep -q "[never]" /sys/kernel/mm/transparent_hugepage/enabled',
+      path => "/usr/bin:/bin:/usr/sbin:/sbin"
     }
   }
 }
