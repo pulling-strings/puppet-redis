@@ -86,7 +86,7 @@ class redis(
       ensure    => running,
       enable    => true,
       hasstatus => true,
-      require => Package[$package]
+      require   => Package[$package]
     }
   }
 
@@ -96,8 +96,8 @@ class redis(
   if($disable_hugepages) {
     exec{'disable hugepages':
       command => 'echo never > /sys/kernel/mm/transparent_hugepage/enabled',
-      unless => 'grep -q "[never]" /sys/kernel/mm/transparent_hugepage/enabled',
-      path => "/usr/bin:/bin:/usr/sbin:/sbin"
+      unless  => 'grep -q "[never]" /sys/kernel/mm/transparent_hugepage/enabled',
+      path    => '/usr/bin:/bin:/usr/sbin:/sbin'
     }
   }
 }
