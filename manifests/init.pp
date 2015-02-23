@@ -1,30 +1,4 @@
-# == Class: redis
-#
-#  A puppet module for redis, works on Ubuntu 12.10
-#
-# === Parameters
-#
-# Document parameters here.
-#
-# [*append*]
-#  Enables aof persistency
-#
-# === Variables
-#
-# === Examples
-#
-#  class {redis:
-#    append => true
-#  }
-#
-# === Authors
-#
-# Author Name <narkisr@gmail.com>
-#
-# === Copyright
-#
-# Copyright 2013 Ronen Narkis , unless otherwise noted.
-#
+# Setting up a redis instance
 class redis(
   $append=false,
   $unbind=false,
@@ -93,6 +67,7 @@ class redis(
   if($manage_sysctl) {
     sysctl{'vm.overcommit_memory': value => 1 }
   }
+
   if($disable_hugepages) {
     exec{'disable hugepages':
       command => 'echo never > /sys/kernel/mm/transparent_hugepage/enabled',
