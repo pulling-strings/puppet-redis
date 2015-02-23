@@ -1,6 +1,6 @@
 # Intro 
 
-A puppet module which sets up [redis](http://redis.io/).
+A puppet module which sets up [redis](http://redis.io/) using a package.
 
 # Usage
 
