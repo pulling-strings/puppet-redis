@@ -1,12 +1,12 @@
 # Setting up a redis instance
 class redis(
   $append=false,
-  $unbind=false,
   $daemonize=true,
   $manage_services=false,
   $manage_sysctl=true,
   $disable_hugepages=true,
 ) {
+
 
   case $::operatingsystem {
     'RedHat', 'CentOS': {
@@ -21,6 +21,9 @@ class redis(
       $conf = '/etc/redis/redis.conf'
       include redis::ubuntu
     }
+    default: {
+      fail("Module ${module_name} is not supported on ${::operatingsystem}")
+    }
   }
 
   if($append){
@@ -33,15 +36,7 @@ class redis(
     }
   }
 
-  if($unbind) {
-    editfile::config { 'unbind local':
-      ensure  => 'absent',
-      path    => $conf,
-      entry   => 'bind',
-      sep     => ' ',
-      require => Package[$package]
-    }
-  }
+
 
   if(!$daemonize) {
     editfile::config { 'daemonize false':
@@ -69,9 +64,10 @@ class redis(
   }
 
   if($disable_hugepages) {
+    $unless = 'grep -q "[never]" /sys/kernel/mm/transparent_hugepage/enabled'
     exec{'disable hugepages':
       command => 'echo never > /sys/kernel/mm/transparent_hugepage/enabled',
-      unless  => 'grep -q "[never]" /sys/kernel/mm/transparent_hugepage/enabled',
+      unless  => $unless,
       path    => '/usr/bin:/bin:/usr/sbin:/sbin'
     }
   }
