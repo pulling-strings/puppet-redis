@@ -4,7 +4,7 @@
 # }
 # or remove the bind entry completely:
 # 
-# redis::bind {'allow all':
+# redis::bind {'no bindings at all':
 #   unbind => true
 # }
 define redis::bind(
