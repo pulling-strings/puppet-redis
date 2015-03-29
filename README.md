@@ -9,6 +9,10 @@ A puppet module which sets up [redis](http://redis.io/) using a package.
 class{ 'redis':
     append => true
 }
+redis::bind {'allow all':
+  bind => '0.0.0.0'
+}
+
 ```
 
 See [redis-sandbox](https://github.com/narkisr/redis-sandbox) for a fully working sandbox.
