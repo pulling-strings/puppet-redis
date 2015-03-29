@@ -2,7 +2,7 @@
 class redis(
   $append=false,
   $daemonize=true,
-  $manage_services=false,
+  $manage_service=true,
   $manage_sysctl=true,
   $disable_hugepages=true,
 ) {
@@ -48,7 +48,7 @@ class redis(
     }
   }
 
-  if($manage_services) {
+  if($manage_service) {
     Editfile::Config <||> ~> Service[$service]
 
     service{$service:
