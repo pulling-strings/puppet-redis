@@ -11,7 +11,11 @@ define redis::bind(
   $unbind=false,
   $bind = false
 ){
-  
+
+  if(::redis::manage_service == true){
+    Editfile::Config<||> ~> Service[$::redis::service]
+  }
+
   if($bind) {
     validate_string($bind)
     editfile::config { "bind ${bind}":
@@ -20,7 +24,8 @@ define redis::bind(
       entry   => 'bind',
       sep     => ' ',
       require => Package[$::redis::package]
-    } ~> Service[$::redis::service]
+    }
+    
   } elsif($unbind) {
     editfile::config { 'unbind local':
       ensure  => 'absent',
@@ -28,6 +33,6 @@ define redis::bind(
       entry   => 'bind',
       sep     => ' ',
       require => Package[$::redis::package]
-    } ~> Service[$::redis::service]
+    }
   }
 }
