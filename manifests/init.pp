@@ -64,10 +64,12 @@ class redis(
   }
 
   if($disable_hugepages) {
-    $unless = 'grep -q "[never]" /sys/kernel/mm/transparent_hugepage/enabled'
-    exec{'disable hugepages':
+    $huge_dir = '/sys/kernel/mm/transparent_hugepage'
+    $unless = "grep -q \"[never]\" ${huge_dir}/enabled"
+    exec{ 'disable hugepages':
       command => 'echo never > /sys/kernel/mm/transparent_hugepage/enabled',
       unless  => $unless,
+      onlyif => "test -d ${huge_dir}",
       path    => '/usr/bin:/bin:/usr/sbin:/sbin'
     }
   }
