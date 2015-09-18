@@ -2,7 +2,9 @@
 class redis::ubuntu{
   include apt
 
-  apt::ppa { 'ppa:chris-lea/redis-server': }
+  apt::ppa { 'ppa:chris-lea/redis-server':
+    package_manage => true
+  }
 
   package{'redis-server':
     ensure  => present,
