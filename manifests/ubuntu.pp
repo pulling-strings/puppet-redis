@@ -2,9 +2,12 @@
 class redis::ubuntu{
   include apt
 
-  apt::ppa { 'ppa:chris-lea/redis-server':
-    package_manage => true
+  if $::lsbrelease == '15.10' {
+    Package['software-properties-common'] -> Exec <||>
+    ensure_packages(['software-properties-common'])
   }
+
+  apt::ppa {'ppa:chris-lea/redis-server': }
 
   package{'redis-server':
     ensure  => present,
