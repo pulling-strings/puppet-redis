@@ -12,9 +12,7 @@ class redis::ubuntu{
     }
   }
 
-  apt::ppa { 'ppa:chris-lea/redis-server':
-    package_manage => true
-  }
+  apt::ppa {'ppa:chris-lea/redis-server': }
 
   package{'redis-server':
     ensure  => present,
