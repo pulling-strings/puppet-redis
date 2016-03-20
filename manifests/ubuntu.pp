@@ -10,6 +10,10 @@ class redis::ubuntu{
     Service {
       provider => systemd
     }
+  } else {
+    package{'python-software-properties':
+      ensure  => present
+    } -> Exec <||>
   }
 
   apt::ppa {'ppa:chris-lea/redis-server': }
