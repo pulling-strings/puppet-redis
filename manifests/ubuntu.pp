@@ -2,7 +2,7 @@
 class redis::ubuntu{
   include apt
 
-  if $lsbdistrelease == '15.10' {
+  if $lsbdistrelease == '15.10' || $lsbdistrelease == '15.04' {
     package{'software-properties-common':
       ensure  => present
     } -> Exec <||>
